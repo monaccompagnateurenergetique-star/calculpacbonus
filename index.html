@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur CEE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>Calculateur CEE BAR-TH-171</h1>
+
+        <div class="input-group">
+            <label for="etas">Efficacité énergétique (Etas) :</label>
+            <select id="etas">
+                <option value="111-140">111% ≤ Etas < 140%</option>
+                <option value="140-170">140% ≤ Etas < 170%</option>
+                <option value="170-200">170% ≤ Etas < 200%</option>
+                <option value="200+">200% ≤ Etas</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="usage">Usage :</label>
+            <select id="usage">
+                <option value="Chauffage et ECS">Chauffage et ECS</option>
+                <option value="Chauffage">Chauffage</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="surface">Surface chauffée (m²) :</label>
+            <input type="number" id="surface" min="1" required>
+        </div>
+
+        <div class="input-group">
+            <label for="zone">Zone géographique :</label>
+            <select id="zone">
+                <option value="H1">H1</option>
+                <option value="H2">H2</option>
+                <option value="H3">H3</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="mwhCumacPrice">Prix du MWh cumac (€) :</label>
+            <input type="number" id="mwhCumacPrice" value="9" min="0" step="0.01" required>
+        </div>
+        
+        <div class="input-group bonus-group">
+            <label for="bonusCheckbox">
+                <input type="checkbox" id="bonusCheckbox">
+                Appliquer le bonus Coup de boost
+            </label>
+            <input type="number" id="bonusMultiplier" value="6" min="1" class="hidden">
+        </div>
+
+        <button onclick="calculate()">Calculer</button>
+
+        <div class="results">
+            <h2>Résultats</h2>
+            <p>kWh cumac de base : <span id="kwhCumacBase">0</span></p>
+            <p>kWh cumac total (avec bonus) : <span id="kwhCumacTotal">0</span></p>
+            <p>Prime estimée : <span id="estimatedPrime">0 €</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
