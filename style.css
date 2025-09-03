@@ -1,39 +1,165 @@
-/* ... (Code CSS précédent, non modifié) */
-
-.tables-container {
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* En-tête et navigation */
+header {
+    width: 100%;
+    background-color: #007bff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover, nav a.active-link {
+    background-color: #0056b3;
+}
+
+/* Conteneurs principaux */
+main {
+    width: 100%;
+    max-width: 900px; /* Augmentation de la largeur pour les tableaux */
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.calculator-container, .explanations-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Titres */
+h1, h2 {
+    color: #0056b3;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Champs de saisie */
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.bonus-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin-top: 20px;
 }
 
-table {
+.bonus-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.bonus-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Bouton */
+button {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #f9f9f9;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
+    padding: 12px;
     background-color: #007bff;
-    color: white;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-.table-group {
-    flex: 1;
-    min-width: 250px;
+button:hover {
+    background-color: #0056b3;
 }
-.formula {
-    text-align: center;
-    font-size: 1.2em;
+
+/* Résultats */
+.results {
+    margin-top: 25px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.results p {
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.results span {
     font-weight: bold;
-    color: #0056b3;
-    margin: 20px 0;
+    color: #28a745;
 }
+
+/* Page d'explications et tableaux */
+.explanations-container p, .explanations-container li {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.explanations-container a {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+    color: #007bff;
+}
+
+.formula {
+    text-align: center
