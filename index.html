@@ -21,6 +21,14 @@
             <p class="subtitle">Estimez le montant de votre prime CEE pour l'installation d'une pompe à chaleur air/eau.</p>
 
             <div class="input-group">
+                <label for="typeLogement">Type de logement :</label>
+                <select id="typeLogement">
+                    <option value="maison">Maison individuelle</option>
+                    <option value="appartement">Appartement</option>
+                </select>
+            </div>
+
+            <div class="input-group">
                 <label for="etas">Efficacité énergétique (Etas) :</label>
                 <select id="etas">
                     <option value="111-140">111% ≤ Etas < 140%</option>
@@ -39,8 +47,9 @@
             </div>
 
             <div class="input-group">
-                <label for="surface">Surface chauffée (m²) :</label>
-                <input type="number" id="surface" min="1" required>
+                <label for="surfaceRange">Surface chauffée (m²) :</label>
+                <select id="surfaceRange">
+                    </select>
             </div>
 
             <div class="input-group">
@@ -78,23 +87,40 @@
 
     <main id="explications" class="hidden">
         <div class="explanations-container">
-            <h2>Qu'est-ce que le kWh cumac ?</h2>
-            <p>Le **kWh cumac** (kilowattheure cumulé et actualisé) est l'unité de mesure utilisée dans le dispositif des Certificats d'Économie d'Énergie (CEE). Il représente une économie d'énergie qui est réalisée sur la durée de vie de l'équipement (ici, la pompe à chaleur). C'est ce volume d'énergie économisée qui sert de base au calcul de votre prime.</p>
+            <h2>Méthode de Calcul pour BAR-TH-171</h2>
+            <p>Le montant en kWh CUMAC est calculé selon la formule :</p>
+            <p class="formula">Montant = Base × Facteur Surface × Facteur Zone</p>
+
+            <h3>Maison Individuelle</h3>
+            <div class="tables-container">
+                <div class="table-group">
+                    <h4>Montant forfaitaire de base</h4>
+                    <table id="table-maison-base"></table>
+                </div>
+                <div class="table-group">
+                    <h4>Facteur correctif de surface</h4>
+                    <table id="table-maison-surface"></table>
+                </div>
+            </div>
+
+            <h3>Appartement</h3>
+            <div class="tables-container">
+                <div class="table-group">
+                    <h4>Montant forfaitaire de base</h4>
+                    <table id="table-appartement-base"></table>
+                </div>
+                <div class="table-group">
+                    <h4>Facteur correctif de surface</h4>
+                    <table id="table-appartement-surface"></table>
+                </div>
+            </div>
             
-            <h2>Comment le calcul est-il fait ?</h2>
-            <p>Le montant de votre prime CEE est calculé en fonction de plusieurs critères :</p>
-            <ul>
-                <li>**Efficacité énergétique (Etas)** : Plus la PAC est performante, plus les économies d'énergie sont importantes.</li>
-                <li>**Usage** : La prime est plus élevée si la pompe à chaleur sert au chauffage et à l'eau chaude sanitaire (ECS) plutôt qu'au seul chauffage.</li>
-                <li>**Surface chauffée** : Plus la surface du logement est grande, plus l'économie d'énergie potentielle est élevée.</li>
-                <li>**Zone géographique** : Le calcul prend en compte la rigueur du climat (zone H1 pour les zones froides, H3 pour les zones douces).</li>
-            </ul>
-            <p>Le montant en euros est une estimation car le prix du MWh cumac varie sur le marché.</p>
-            
-            <h2>Le bonus Coup de boost</h2>
-            <p>Le bonus "Coup de boost" est une bonification temporaire qui peut s'ajouter à la prime CEE de base pour inciter au remplacement de chaudières polluantes. Le multiplicateur utilisé dans ce calculateur (par exemple, x6) est un exemple de l'impact que ce bonus peut avoir sur le montant final.</p>
-            
-            <a href="https://www.ecologie.gouv.fr/" target="_blank">Consulter les fiches officielles du Ministère de l'Écologie</a>
+            <h3>Facteur Correctif de Zone Climatique</h3>
+            <table id="table-zone"></table>
+
+            <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-TH-171%20vA55-1%20%C3%A0%20compter%20du%2001-01-2024.pdf" target="_blank">
+                Consulter les fiches officielles du Ministère de l'Écologie
+            </a>
         </div>
     </main>
 
