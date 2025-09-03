@@ -1,4 +1,34 @@
-// Fonction pour afficher/masquer le champ du multiplicateur
+// Fonction pour basculer entre le calculateur et la page d'explications
+function showPage(pageId) {
+    const calculatorPage = document.getElementById('calculateur');
+    const explanationsPage = document.getElementById('explications');
+    const links = document.querySelectorAll('nav a');
+
+    if (pageId === 'calculateur') {
+        calculatorPage.classList.remove('hidden');
+        explanationsPage.classList.add('hidden');
+        links[0].classList.add('active-link');
+        links[1].classList.remove('active-link');
+    } else {
+        calculatorPage.classList.add('hidden');
+        explanationsPage.classList.remove('hidden');
+        links[0].classList.remove('active-link');
+        links[1].classList.add('active-link');
+    }
+}
+
+// Ajout des listeners pour la navigation
+document.querySelector('a[href="#calculateur"]').addEventListener('click', (e) => {
+    e.preventDefault();
+    showPage('calculateur');
+});
+
+document.querySelector('a[href="#explications"]').addEventListener('click', (e) => {
+    e.preventDefault();
+    showPage('explications');
+});
+
+// Écouteur pour afficher/masquer le champ du multiplicateur et recalculer
 document.getElementById('bonusCheckbox').addEventListener('change', function() {
     const bonusMultiplierInput = document.getElementById('bonusMultiplier');
     if (this.checked) {
@@ -16,6 +46,7 @@ document.getElementById('surface').addEventListener('input', calculate);
 document.getElementById('zone').addEventListener('change', calculate);
 document.getElementById('mwhCumacPrice').addEventListener('input', calculate);
 document.getElementById('bonusMultiplier').addEventListener('input', calculate);
+document.getElementById('calculate-btn').addEventListener('click', calculate);
 
 // Fonction principale de calcul
 function calculate() {
@@ -27,7 +58,6 @@ function calculate() {
     const bonusActive = document.getElementById('bonusCheckbox').checked;
     const bonusMultiplier = parseFloat(document.getElementById('bonusMultiplier').value);
 
-    // Si les champs ne sont pas valides, on ne fait pas de calcul
     if (isNaN(surface) || surface <= 0 || isNaN(mwhCumacPrice) || mwhCumacPrice < 0) {
         document.getElementById('kwhCumacBase').textContent = "0";
         document.getElementById('kwhCumacTotal').textContent = "0";
@@ -85,5 +115,5 @@ function calculate() {
     document.getElementById('estimatedPrime').textContent = estimatedPrime.toFixed(2) + ' €';
 }
 
-// Appel initial pour afficher les résultats par défaut au chargement de la page
-calculate();
+// Appel initial pour que le calculateur soit prêt au chargement
+document.addEventListener('DOMContentLoaded', calculate);
