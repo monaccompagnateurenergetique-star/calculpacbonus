@@ -2,10 +2,10 @@
 const data = {
     maison: {
         baseValues: {
-            '111-140': { 'Chauffage et ECS': 47800, 'Chauffage': 37600 },
-            '140-170': { 'Chauffage et ECS': 77300, 'Chauffage': 60800 },
-            '170-200': { 'Chauffage et ECS': 97100, 'Chauffage': 76300 },
-            '200+': { 'Chauffage et ECS': 106000, 'Chauffage': 83300 }
+            '111-140': { 'Chauffage et ECS': 96700, 'Chauffage': 79500 },
+            '140-170': { 'Chauffage et ECS': 111500, 'Chauffage': 91600 },
+            '170-200': { 'Chauffage et ECS': 121400, 'Chauffage': 99700 },
+            '200+': { 'Chauffage et ECS': 125800, 'Chauffage': 103400 }
         },
         surfaceRanges: [
             { label: 'S < 70m²', value: 0.5 },
@@ -17,10 +17,10 @@ const data = {
     },
     appartement: {
         baseValues: {
-            '111-140': { 'Chauffage et ECS': 26000, 'Chauffage': 16600 },
-            '140-170': { 'Chauffage et ECS': 42000, 'Chauffage': 26900 },
-            '170-200': { 'Chauffage et ECS': 52700, 'Chauffage': 33700 },
-            '200+': { 'Chauffage et ECS': 57600, 'Chauffage': 36800 }
+            '111-140': { 'Chauffage et ECS': 54000, 'Chauffage': 38400 },
+            '140-170': { 'Chauffage et ECS': 62300, 'Chauffage': 44300 },
+            '170-200': { 'Chauffage et ECS': 67800, 'Chauffage': 48200 },
+            '200+': { 'Chauffage et ECS': 70300, 'Chauffage': 50000 }
         },
         surfaceRanges: [
             { label: 'S < 35m²', value: 0.5 },
@@ -116,3 +116,4 @@ function calculate() {
 document.addEventListener('DOMContentLoaded', () => {
     updateSurfaceOptions();
 });
+
