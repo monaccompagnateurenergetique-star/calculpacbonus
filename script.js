@@ -63,9 +63,6 @@ function updateSurfaceOptions() {
     calculate();
 }
 
-// Fonction pour afficher/masquer le champ du multiplicateur
-document.getElementById('bonusCheckbox').addEventListener('change', calculate);
-
 // Écouteurs pour le calcul en temps réel
 document.getElementById('typeLogement').addEventListener('change', updateSurfaceOptions);
 document.getElementById('etas').addEventListener('change', calculate);
@@ -74,6 +71,7 @@ document.getElementById('surfaceRange').addEventListener('change', calculate);
 document.getElementById('zone').addEventListener('change', calculate);
 document.getElementById('mwhCumacPrice').addEventListener('input', calculate);
 document.getElementById('revenuCategory').addEventListener('change', calculate);
+document.getElementById('bonusCheckbox').addEventListener('change', calculate);
 
 // Fonction principale de calcul
 function calculate() {
@@ -84,6 +82,7 @@ function calculate() {
     const zone = document.getElementById('zone').value;
     const mwhCumacPrice = parseFloat(document.getElementById('mwhCumacPrice').value);
     const bonusActive = document.getElementById('bonusCheckbox').checked;
+    const revenuCategory = document.getElementById('revenuCategory').value;
     
     if (isNaN(mwhCumacPrice) || mwhCumacPrice < 0) {
         document.getElementById('kwhCumacTotal').textContent = "0 kWh";
@@ -95,18 +94,17 @@ function calculate() {
 
     const baseKwhCumac = data[typeLogement].baseValues[etas][usage];
     const zoneFactor = data.zoneFactors[zone];
-    const finalKwhCumacBase = baseKwhCumac * surfaceFactor * zoneFactor;
-
-    let finalKwhCumacTotal = finalKwhCumacBase;
+    
+    let finalKwhCumac = baseKwhCumac * surfaceFactor * zoneFactor;
     if (bonusActive) {
-        finalKwhCumacTotal = finalKwhCumacBase * 5;
+        finalKwhCumac = finalKwhCumac * 5;
     }
 
-    const estimatedPrimeCEE = (finalKwhCumacTotal / 1000) * mwhCumacPrice;
+    const estimatedPrimeCEE = (finalKwhCumac / 1000) * mwhCumacPrice;
     const mpRenovAide = data.mpRenovAids[revenuCategory];
     const totalAides = estimatedPrimeCEE + mpRenovAide;
 
-    document.getElementById('kwhCumacTotal').textContent = finalKwhCumacTotal.toLocaleString('fr-FR') + ' kWh';
+    document.getElementById('kwhCumacTotal').textContent = finalKwhCumac.toLocaleString('fr-FR') + ' kWh';
     document.getElementById('estimatedPrimeCEE').textContent = estimatedPrimeCEE.toFixed(2).replace('.', ',') + ' €';
     document.getElementById('mpRenovAide').textContent = mpRenovAide.toFixed(2).replace('.', ',') + ' €';
     document.getElementById('totalAides').textContent = totalAides.toFixed(2).replace('.', ',') + ' €';
@@ -116,4 +114,3 @@ function calculate() {
 document.addEventListener('DOMContentLoaded', () => {
     updateSurfaceOptions();
 });
-
