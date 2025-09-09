@@ -18,7 +18,7 @@
     <main id="calculateur">
         <div class="calculator-container">
             <h1>Calculateur CEE BAR-TH-171</h1>
-            <p class="subtitle">Estimez le montant de votre prime CEE pour l'installation d'une pompe à chaleur air/eau.</p>
+            <p class="subtitle">Estimez le montant de votre prime CEE et MaPrimeRénov' pour l'installation d'une pompe à chaleur air/eau.</p>
 
             <div class="input-group">
                 <label for="typeLogement">Type de logement :</label>
@@ -65,22 +65,30 @@
                 <label for="mwhCumacPrice">Prix du MWh cumac (€) :</label>
                 <input type="number" id="mwhCumacPrice" value="9" min="0" step="0.01" required>
             </div>
+
+            <div class="input-group">
+                <label for="revenuCategory">Catégorie de revenu MaPrimeRénov' :</label>
+                <select id="revenuCategory">
+                    <option value="bleu">Très modestes (Bleu)</option>
+                    <option value="jaune">Modestes (Jaune)</option>
+                    <option value="violet">Intermédiaires (Violet)</option>
+                    <option value="rose">Supérieurs (Rose)</option>
+                </select>
+            </div>
             
             <div class="input-group bonus-group">
                 <label for="bonusCheckbox">
                     <input type="checkbox" id="bonusCheckbox">
                     Appliquer le bonus Coup de boost
                 </label>
-                <input type="number" id="bonusMultiplier" value="6" min="1" class="hidden">
+                <input type="number" id="bonusMultiplier" value="5" min="1" class="hidden">
             </div>
-
-            <button id="calculate-btn">Calculer</button>
 
             <div class="results">
                 <h2>Résultats</h2>
-                <p>kWh cumac de base : <span id="kwhCumacBase">0</span></p>
-                <p>kWh cumac total (avec bonus) : <span id="kwhCumacTotal">0</span></p>
-                <p>Prime estimée : <span id="estimatedPrime">0 €</span></p>
+                <p>Prime CEE estimée : <span id="estimatedPrimeCEE">0 €</span></p>
+                <p>Aide MaPrimeRénov' : <span id="mpRenovAide">0 €</span></p>
+                <p>Total des aides (CEE + MaPrimeRénov') : <span id="totalAides">0 €</span></p>
             </div>
         </div>
     </main>
