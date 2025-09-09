@@ -18,15 +18,7 @@
     <main id="calculateur">
         <div class="calculator-container">
             <h1>Calculateur CEE BAR-TH-171</h1>
-            <p class="subtitle">Estimez le montant de votre prime CEE et MaPrimeRénov' pour l'installation d'une pompe à chaleur air/eau.</p>
-
-            <div class="input-group">
-                <label for="typeLogement">Type de logement :</label>
-                <select id="typeLogement">
-                    <option value="maison">Maison individuelle</option>
-                    <option value="appartement">Appartement</option>
-                </select>
-            </div>
+            <p class="subtitle">Estimez le montant de votre prime CEE pour l'installation d'une pompe à chaleur air/eau.</p>
 
             <div class="input-group">
                 <label for="etas">Efficacité énergétique (Etas) :</label>
@@ -47,9 +39,8 @@
             </div>
 
             <div class="input-group">
-                <label for="surfaceRange">Surface chauffée (m²) :</label>
-                <select id="surfaceRange">
-                    </select>
+                <label for="surface">Surface chauffée (m²) :</label>
+                <input type="number" id="surface" min="1" required>
             </div>
 
             <div class="input-group">
@@ -65,70 +56,45 @@
                 <label for="mwhCumacPrice">Prix du MWh cumac (€) :</label>
                 <input type="number" id="mwhCumacPrice" value="9" min="0" step="0.01" required>
             </div>
-
-            <div class="input-group">
-                <label for="revenuCategory">Catégorie de revenu MaPrimeRénov' :</label>
-                <select id="revenuCategory">
-                    <option value="bleu">Très modestes (Bleu)</option>
-                    <option value="jaune">Modestes (Jaune)</option>
-                    <option value="violet">Intermédiaires (Violet)</option>
-                    <option value="rose">Supérieurs (Rose)</option>
-                </select>
-            </div>
             
             <div class="input-group bonus-group">
                 <label for="bonusCheckbox">
                     <input type="checkbox" id="bonusCheckbox">
                     Appliquer le bonus Coup de boost
                 </label>
-                <input type="number" id="bonusMultiplier" value="5" min="1" class="hidden">
+                <input type="number" id="bonusMultiplier" value="6" min="1" class="hidden">
             </div>
+
+            <button id="calculate-btn">Calculer</button>
 
             <div class="results">
                 <h2>Résultats</h2>
-                <p>Prime CEE estimée : <span id="estimatedPrimeCEE">0 €</span></p>
-                <p>Aide MaPrimeRénov' : <span id="mpRenovAide">0 €</span></p>
-                <p>Total des aides (CEE + MaPrimeRénov') : <span id="totalAides">0 €</span></p>
+                <p>kWh cumac de base : <span id="kwhCumacBase">0</span></p>
+                <p>kWh cumac total (avec bonus) : <span id="kwhCumacTotal">0</span></p>
+                <p>Prime estimée : <span id="estimatedPrime">0 €</span></p>
             </div>
         </div>
     </main>
 
     <main id="explications" class="hidden">
         <div class="explanations-container">
-            <h2>Méthode de Calcul pour BAR-TH-171</h2>
-            <p>Le montant en kWh CUMAC est calculé selon la formule :</p>
-            <p class="formula">Montant = Base × Facteur Surface × Facteur Zone</p>
-
-            <h3>Maison Individuelle</h3>
-            <div class="tables-container">
-                <div class="table-group">
-                    <h4>Montant forfaitaire de base</h4>
-                    <table id="table-maison-base"></table>
-                </div>
-                <div class="table-group">
-                    <h4>Facteur correctif de surface</h4>
-                    <table id="table-maison-surface"></table>
-                </div>
-            </div>
-
-            <h3>Appartement</h3>
-            <div class="tables-container">
-                <div class="table-group">
-                    <h4>Montant forfaitaire de base</h4>
-                    <table id="table-appartement-base"></table>
-                </div>
-                <div class="table-group">
-                    <h4>Facteur correctif de surface</h4>
-                    <table id="table-appartement-surface"></table>
-                </div>
-            </div>
+            <h2>Qu'est-ce que le kWh cumac ?</h2>
+            <p>Le **kWh cumac** (kilowattheure cumulé et actualisé) est l'unité de mesure utilisée dans le dispositif des Certificats d'Économie d'Énergie (CEE). Il représente une économie d'énergie qui est réalisée sur la durée de vie de l'équipement (ici, la pompe à chaleur). C'est ce volume d'énergie économisée qui sert de base au calcul de votre prime.</p>
             
-            <h3>Facteur Correctif de Zone Climatique</h3>
-            <table id="table-zone"></table>
-
-            <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-TH-171%20vA55-1%20%C3%A0%20compter%20du%2001-01-2024.pdf" target="_blank">
-                Consulter les fiches officielles du Ministère de l'Écologie
-            </a>
+            <h2>Comment le calcul est-il fait ?</h2>
+            <p>Le montant de votre prime CEE est calculé en fonction de plusieurs critères :</p>
+            <ul>
+                <li>**Efficacité énergétique (Etas)** : Plus la PAC est performante, plus les économies d'énergie sont importantes.</li>
+                <li>**Usage** : La prime est plus élevée si la pompe à chaleur sert au chauffage et à l'eau chaude sanitaire (ECS) plutôt qu'au seul chauffage.</li>
+                <li>**Surface chauffée** : Plus la surface du logement est grande, plus l'économie d'énergie potentielle est élevée.</li>
+                <li>**Zone géographique** : Le calcul prend en compte la rigueur du climat (zone H1 pour les zones froides, H3 pour les zones douces).</li>
+            </ul>
+            <p>Le montant en euros est une estimation car le prix du MWh cumac varie sur le marché.</p>
+            
+            <h2>Le bonus Coup de boost</h2>
+            <p>Le bonus "Coup de boost" est une bonification temporaire qui peut s'ajouter à la prime CEE de base pour inciter au remplacement de chaudières polluantes. Le multiplicateur utilisé dans ce calculateur (par exemple, x6) est un exemple de l'impact que ce bonus peut avoir sur le montant final.</p>
+            
+            <a href="https://www.ecologie.gouv.fr/" target="_blank">Consulter les fiches officielles du Ministère de l'Écologie</a>
         </div>
     </main>
 
