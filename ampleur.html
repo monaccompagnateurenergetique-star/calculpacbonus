@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Rénovation d'Ampleur - CEE</title>
+    <link rel="stylesheet" href="ampleur.css">
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <a href="index.html">Simulateur PAC</a>
+        <a href="ampleur.html" class="active">Rénovation d'Ampleur</a>
+    </nav>
+
+    <div class="app">
+        <header class="header">
+            <h1>Simulateur Rénovation d'Ampleur</h1>
+            <p class="header-subtitle">Estimez votre prime CEE pour un projet de rénovation d'ampleur non valorisé par l'Anah (fiches BAR-TH-174 &amp; BAR-TH-175)</p>
+        </header>
+
+        <main class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🏠</span>
+                    <h2>Caractéristiques du logement</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="typeLogement">Type de logement</label>
+                        <select id="typeLogement">
+                            <option value="maison">Maison individuelle (BAR-TH-174)</option>
+                            <option value="appartement">Appartement (BAR-TH-175)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="surfaceRange">Surface habitable (Shab)</label>
+                        <select id="surfaceRange">
+                            <option value="0.4">Moins de 35 m²</option>
+                            <option value="0.5">De 35 à 59 m²</option>
+                            <option value="0.8">De 60 à 89 m²</option>
+                            <option value="1.0" selected>De 90 à 110 m²</option>
+                            <option value="1.2">De 110 à 130 m²</option>
+                            <option value="1.3">Plus de 130 m²</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h2>Performance énergétique</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="classeAvant">Classe DPE avant travaux</label>
+                        <select id="classeAvant">
+                            <option value="G">G (passoire thermique)</option>
+                            <option value="F">F</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="classeApres">Classe DPE après travaux</label>
+                        <select id="classeApres">
+                            <option value="D">D</option>
+                            <option value="C">C</option>
+                            <option value="B">B</option>
+                            <option value="A">A</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <div class="dpe-visual">
+                            <div class="dpe-arrow" id="dpeArrow">
+                                <span class="dpe-before" id="dpeBefore">G</span>
+                                <span class="dpe-arrow-icon">→</span>
+                                <span class="dpe-after" id="dpeAfter">D</span>
+                                <span class="dpe-sauts" id="dpeSauts">3 sauts de classe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">💰</span>
+                    <h2>Paramètres financiers</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="prixMWhCumac">Prix du MWh cumac (€)</label>
+                        <input type="number" id="prixMWhCumac" value="8.78" min="0" step="0.01">
+                        <span class="input-hint">Cours moyen : ~8,78 €/MWh cumac</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="coupDePouce">Bonification Coup de Pouce</label>
+                        <select id="coupDePouce">
+                            <option value="1">Sans Coup de Pouce (×1)</option>
+                            <option value="2" selected>Ménages modestes - Charte (×2)</option>
+                            <option value="4">Ménages modestes - Anah (×4)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-card" id="resultsCard">
+                <div class="card-header">
+                    <span class="card-icon">✅</span>
+                    <h2>Résultats de la simulation</h2>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Volume CEE de base</span>
+                        <span class="result-value" id="kwhCumacBase">0 kWh cumac</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coefficient surface (Shab)</span>
+                        <span class="result-value" id="coeffSurface">×1,0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coefficient Coup de Pouce</span>
+                        <span class="result-value" id="coeffCdP">×2</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label">Volume CEE total</span>
+                        <span class="result-value large" id="kwhCumacTotal">0 kWh cumac</span>
+                    </div>
+                    <div class="result-item highlight primary">
+                        <span class="result-label">Prime CEE estimée</span>
+                        <span class="result-value large" id="primeCEE">0 €</span>
+                    </div>
+                </div>
+
+                <div class="result-note" id="resultNote"></div>
+            </div>
+
+            <div class="info-card">
+                <h3>Informations importantes</h3>
+                <ul>
+                    <li>Ce simulateur concerne les projets de rénovation d'ampleur <strong>non valorisés par l'Anah</strong>.</li>
+                    <li>Les travaux doivent permettre un gain d'au moins <strong>2 classes DPE</strong> avec au moins <strong>2 postes d'isolation</strong> traités.</li>
+                    <li>Les montants sont basés sur les fiches <strong>BAR-TH-174</strong> (maisons) et <strong>BAR-TH-175</strong> (appartements), version A80.3 applicable depuis le 17/01/2026.</li>
+                    <li>Le Coup de Pouce ×2 est réservé aux <strong>ménages modestes</strong> (signataires de la charte). Le ×4 s'applique lorsque le demandeur est l'Anah.</li>
+                    <li>Le prix du MWh cumac est variable selon le marché. Cours indicatif : ~8,78 €/MWh cumac (décembre 2025).</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Simulateur indicatif — Les montants réels peuvent varier. Consultez un professionnel RGE pour une estimation précise.</p>
+        </footer>
+    </div>
+
+    <script src="ampleur.js"></script>
+</body>
+</html>

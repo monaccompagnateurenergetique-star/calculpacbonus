@@ -1,171 +1,116 @@
-// Données officielles BAR-TH-174 / BAR-TH-175 (version A80.3, applicable depuis le 17/01/2026)
-// Source : Ministère de la Transition Écologique
-
-const CEE_DATA = {
-    // Montants de base en kWh cumac selon le nombre de sauts de classes DPE
-    kwhCumacBase: {
-        2: 360200,
-        3: 447900,
-        4: 568600  // 4 sauts ou plus
+// Données pour le calcul
+const data = {
+    maison: {
+        baseValues: {
+            '111-140': { 'Chauffage et ECS': 96700, 'Chauffage': 79500 },
+            '140-170': { 'Chauffage et ECS': 111500, 'Chauffage': 91600 },
+            '170-200': { 'Chauffage et ECS': 121400, 'Chauffage': 99700 },
+            '200+': { 'Chauffage et ECS': 125800, 'Chauffage': 103400 }
+        },
+        surfaceRanges: [
+            { label: 'S < 70m²', value: 0.5 },
+            { label: '70 ≤ S < 90m²', value: 0.7 },
+            { label: '90 ≤ S < 110m²', value: 1 },
+            { label: '110 ≤ S < 130m²', value: 1.1 },
+            { label: 'S ≥ 130m²', value: 1.6 }
+        ]
     },
-
-    // Facteur correctif selon la surface habitable (Shab) — identique maison et appartement
-    surfaceFactors: [
-        { label: 'Moins de 35 m²', value: 0.4 },
-        { label: 'De 35 à 59 m²', value: 0.5 },
-        { label: 'De 60 à 89 m²', value: 0.8 },
-        { label: 'De 90 à 110 m²', value: 1.0 },
-        { label: 'De 110 à 130 m²', value: 1.2 },
-        { label: 'Plus de 130 m²', value: 1.3 }
-    ],
-
-    // Ordre des classes DPE (de la meilleure à la pire)
-    classesDPE: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-};
-
-// Éléments DOM
-const elements = {
-    typeLogement: document.getElementById('typeLogement'),
-    surfaceRange: document.getElementById('surfaceRange'),
-    classeAvant: document.getElementById('classeAvant'),
-    classeApres: document.getElementById('classeApres'),
-    prixMWhCumac: document.getElementById('prixMWhCumac'),
-    coupDePouce: document.getElementById('coupDePouce'),
-    // Résultats
-    kwhCumacBase: document.getElementById('kwhCumacBase'),
-    coeffSurface: document.getElementById('coeffSurface'),
-    coeffCdP: document.getElementById('coeffCdP'),
-    kwhCumacTotal: document.getElementById('kwhCumacTotal'),
-    primeCEE: document.getElementById('primeCEE'),
-    resultNote: document.getElementById('resultNote'),
-    // DPE visuel
-    dpeBefore: document.getElementById('dpeBefore'),
-    dpeAfter: document.getElementById('dpeAfter'),
-    dpeSauts: document.getElementById('dpeSauts'),
-    dpeArrow: document.getElementById('dpeArrow')
-};
-
-// Calcul du nombre de sauts de classes DPE
-function calculateSauts(classeAvant, classeApres) {
-    const indexAvant = CEE_DATA.classesDPE.indexOf(classeAvant);
-    const indexApres = CEE_DATA.classesDPE.indexOf(classeApres);
-    return indexAvant - indexApres;
-}
-
-// Mise à jour de la visualisation DPE
-function updateDPEVisual(classeAvant, classeApres, sauts) {
-    elements.dpeBefore.textContent = classeAvant;
-    elements.dpeBefore.className = 'dpe-before dpe-' + classeAvant;
-
-    elements.dpeAfter.textContent = classeApres;
-    elements.dpeAfter.className = 'dpe-after dpe-' + classeApres;
-
-    if (sauts < 2) {
-        elements.dpeArrow.className = 'dpe-arrow error';
-        elements.dpeSauts.textContent = sauts <= 0
-            ? 'Classe après doit être meilleure'
-            : '1 saut — minimum 2 requis';
-    } else {
-        elements.dpeArrow.className = 'dpe-arrow';
-        elements.dpeSauts.textContent = sauts + ' saut' + (sauts > 1 ? 's' : '') + ' de classe';
+    appartement: {
+        baseValues: {
+            '111-140': { 'Chauffage et ECS': 54000, 'Chauffage': 38400 },
+            '140-170': { 'Chauffage et ECS': 62300, 'Chauffage': 44300 },
+            '170-200': { 'Chauffage et ECS': 67800, 'Chauffage': 48200 },
+            '200+': { 'Chauffage et ECS': 70300, 'Chauffage': 50000 }
+        },
+        surfaceRanges: [
+            { label: 'S < 35m²', value: 0.5 },
+            { label: '35 ≤ S < 60m²', value: 0.7 },
+            { label: '60 ≤ S < 70m²', value: 1 },
+            { label: '70 ≤ S < 90m²', value: 1.2 },
+            { label: '90 ≤ S < 110m²', value: 1.5 },
+            { label: '110 ≤ S ≤ 130m²', value: 1.9 },
+            { label: 'S > 130m²', value: 2.5 }
+        ]
+    },
+    zoneFactors: {
+        'H1': 1.2,
+        'H2': 1,
+        'H3': 0.7
+    },
+    mpRenovAids: {
+        'bleu': 5000,
+        'jaune': 4000,
+        'violet': 3000,
+        'rose': 0
     }
-}
+};
 
-// Mise à jour des options de classe après travaux selon la classe avant
-function updateClasseApresOptions() {
-    const classeAvant = elements.classeAvant.value;
-    const indexAvant = CEE_DATA.classesDPE.indexOf(classeAvant);
-    const currentApres = elements.classeApres.value;
-
-    elements.classeApres.innerHTML = '';
-
-    // Proposer uniquement les classes meilleures (index inférieur)
-    for (let i = 0; i < indexAvant; i++) {
-        const classe = CEE_DATA.classesDPE[i];
+// Fonction pour générer les options de surface selon le type de logement
+function updateSurfaceOptions() {
+    const type = document.getElementById('typeLogement').value;
+    const surfaceSelect = document.getElementById('surfaceRange');
+    
+    // Vider les options existantes
+    surfaceSelect.innerHTML = '';
+    
+    // Remplir avec les nouvelles options
+    data[type].surfaceRanges.forEach(range => {
         const option = document.createElement('option');
-        option.value = classe;
-        option.textContent = classe;
-        elements.classeApres.appendChild(option);
-    }
-
-    // Restaurer la sélection si elle est toujours valide
-    const options = Array.from(elements.classeApres.options).map(o => o.value);
-    if (options.includes(currentApres)) {
-        elements.classeApres.value = currentApres;
-    }
-
+        option.value = range.value;
+        option.textContent = range.label;
+        surfaceSelect.appendChild(option);
+    });
     calculate();
 }
 
+// Écouteurs pour le calcul en temps réel
+document.getElementById('typeLogement').addEventListener('change', updateSurfaceOptions);
+document.getElementById('etas').addEventListener('change', calculate);
+document.getElementById('usage').addEventListener('change', calculate);
+document.getElementById('surfaceRange').addEventListener('change', calculate);
+document.getElementById('zone').addEventListener('change', calculate);
+document.getElementById('mwhCumacPrice').addEventListener('input', calculate);
+document.getElementById('revenuCategory').addEventListener('change', calculate);
+document.getElementById('bonusCheckbox').addEventListener('change', calculate);
+
 // Fonction principale de calcul
 function calculate() {
-    const classeAvant = elements.classeAvant.value;
-    const classeApres = elements.classeApres.value;
-    const surfaceFactor = parseFloat(elements.surfaceRange.value);
-    const prixMWh = parseFloat(elements.prixMWhCumac.value);
-    const coupDePouce = parseInt(elements.coupDePouce.value);
-
-    const sauts = calculateSauts(classeAvant, classeApres);
-
-    // Mettre à jour le visuel DPE
-    updateDPEVisual(classeAvant, classeApres, sauts);
-
-    // Vérifier la validité
-    if (sauts < 2 || isNaN(prixMWh) || prixMWh < 0) {
-        elements.kwhCumacBase.textContent = '—';
-        elements.coeffSurface.textContent = '×' + surfaceFactor.toLocaleString('fr-FR');
-        elements.coeffCdP.textContent = '×' + coupDePouce;
-        elements.kwhCumacTotal.textContent = '—';
-        elements.primeCEE.textContent = '—';
-
-        if (sauts < 2) {
-            elements.resultNote.textContent = 'Un gain d\'au moins 2 classes DPE est requis pour être éligible.';
-            elements.resultNote.className = 'result-note visible';
-        } else {
-            elements.resultNote.className = 'result-note';
-        }
+    const typeLogement = document.getElementById('typeLogement').value;
+    const etas = document.getElementById('etas').value;
+    const usage = document.getElementById('usage').value;
+    const surfaceFactor = parseFloat(document.getElementById('surfaceRange').value);
+    const zone = document.getElementById('zone').value;
+    const mwhCumacPrice = parseFloat(document.getElementById('mwhCumacPrice').value);
+    const bonusActive = document.getElementById('bonusCheckbox').checked;
+    const revenuCategory = document.getElementById('revenuCategory').value;
+    
+    if (isNaN(mwhCumacPrice) || mwhCumacPrice < 0) {
+        document.getElementById('kwhCumacTotal').textContent = "0 kWh";
+        document.getElementById('estimatedPrimeCEE').textContent = "0 €";
+        document.getElementById('mpRenovAide').textContent = "0 €";
+        document.getElementById('totalAides').textContent = "0 €";
         return;
     }
 
-    // Calcul des kWh cumac
-    // Pour 4 sauts ou plus, on utilise la valeur "4+"
-    const sautsKey = Math.min(sauts, 4);
-    const baseKwh = CEE_DATA.kwhCumacBase[sautsKey];
-    const totalKwh = baseKwh * surfaceFactor * coupDePouce;
+    const baseKwhCumac = data[typeLogement].baseValues[etas][usage];
+    const zoneFactor = data.zoneFactors[zone];
+    
+    let finalKwhCumac = baseKwhCumac * surfaceFactor * zoneFactor;
+    if (bonusActive) {
+        finalKwhCumac = finalKwhCumac * 5;
+    }
 
-    // Calcul de la prime en euros
-    const primeEuros = (totalKwh / 1000) * prixMWh;
+    const estimatedPrimeCEE = (finalKwhCumac / 1000) * mwhCumacPrice;
+    const mpRenovAide = data.mpRenovAids[revenuCategory];
+    const totalAides = estimatedPrimeCEE + mpRenovAide;
 
-    // Affichage des résultats
-    elements.kwhCumacBase.textContent = baseKwh.toLocaleString('fr-FR') + ' kWh cumac';
-    elements.coeffSurface.textContent = '×' + surfaceFactor.toLocaleString('fr-FR');
-    elements.coeffCdP.textContent = '×' + coupDePouce;
-    elements.kwhCumacTotal.textContent = totalKwh.toLocaleString('fr-FR') + ' kWh cumac';
-    elements.primeCEE.textContent = primeEuros.toLocaleString('fr-FR', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }) + ' €';
-
-    // Note explicative
-    const ficheRef = elements.typeLogement.value === 'maison' ? 'BAR-TH-174' : 'BAR-TH-175';
-    elements.resultNote.textContent =
-        'Calcul : ' + baseKwh.toLocaleString('fr-FR') + ' × ' + surfaceFactor.toLocaleString('fr-FR') +
-        ' × ' + coupDePouce + ' = ' + totalKwh.toLocaleString('fr-FR') + ' kWh cumac' +
-        ' | Prime : ' + totalKwh.toLocaleString('fr-FR') + ' ÷ 1000 × ' + prixMWh.toLocaleString('fr-FR') +
-        ' €/MWh = ' + primeEuros.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
-        ' € (fiche ' + ficheRef + ')';
-    elements.resultNote.className = 'result-note visible';
+    document.getElementById('kwhCumacTotal').textContent = finalKwhCumac.toLocaleString('fr-FR') + ' kWh';
+    document.getElementById('estimatedPrimeCEE').textContent = estimatedPrimeCEE.toFixed(2).replace('.', ',') + ' €';
+    document.getElementById('mpRenovAide').textContent = mpRenovAide.toFixed(2).replace('.', ',') + ' €';
+    document.getElementById('totalAides').textContent = totalAides.toFixed(2).replace('.', ',') + ' €';
 }
 
-// Écouteurs d'événements
-elements.typeLogement.addEventListener('change', calculate);
-elements.surfaceRange.addEventListener('change', calculate);
-elements.classeAvant.addEventListener('change', updateClasseApresOptions);
-elements.classeApres.addEventListener('change', calculate);
-elements.prixMWhCumac.addEventListener('input', calculate);
-elements.coupDePouce.addEventListener('change', calculate);
-
-// Initialisation
+// Appel initial pour que le calculateur soit prêt au chargement
 document.addEventListener('DOMContentLoaded', () => {
-    updateClasseApresOptions();
+    updateSurfaceOptions();
 });
