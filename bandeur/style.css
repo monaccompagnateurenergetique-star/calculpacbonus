@@ -1,0 +1,643 @@
+/* ---------------------------------------------------------------
+   LE BANDEUR — feuille de style
+   Ambiance chantier : plaque de plâtre, enduit, marqueur bleu.
+   --------------------------------------------------------------- */
+
+:root {
+    --plaque: #d9d4c9;
+    --plaque-sombre: #b9b2a4;
+    --enduit: #f6f4ef;
+    --nuit: #1c1f24;
+    --nuit-clair: #262a31;
+    --nuit-bord: #343a44;
+    --bleu: #2f7fd6;
+    --bleu-clair: #57a4f0;
+    --vert: #3fb96b;
+    --orange: #e8a13a;
+    --rouge: #e0563f;
+    --texte: #eceae5;
+    --texte-doux: #9aa1ac;
+    --rayon: 14px;
+    --marge-haut: env(safe-area-inset-top, 0px);
+    --marge-bas: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: var(--nuit);
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--texte);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* ------------------------------ ÉCRANS ------------------------------ */
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding-top: var(--marge-haut);
+    padding-bottom: var(--marge-bas);
+}
+
+.screen.is-active {
+    display: flex;
+    animation: apparition .22s ease-out;
+}
+
+@keyframes apparition {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ------------------------------ MENU ------------------------------ */
+
+.screen--menu {
+    justify-content: center;
+    align-items: center;
+    background:
+        radial-gradient(120% 80% at 50% 0%, #30363f 0%, var(--nuit) 60%),
+        var(--nuit);
+}
+
+.menu-inner {
+    width: 100%;
+    max-width: 420px;
+    padding: 24px;
+    text-align: center;
+}
+
+.logo { margin-bottom: 44px; }
+
+.logo-sub {
+    display: block;
+    font-size: 12px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+    margin-bottom: 10px;
+}
+
+.logo-title {
+    margin: 0;
+    font-size: clamp(42px, 15vw, 68px);
+    line-height: .92;
+    font-weight: 900;
+    letter-spacing: -.02em;
+    color: var(--enduit);
+    text-shadow: 0 3px 0 var(--plaque-sombre), 0 14px 30px rgba(0,0,0,.55);
+}
+
+.logo-title::after {
+    content: "";
+    display: block;
+    width: 92px;
+    height: 9px;
+    margin: 16px auto 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--enduit), var(--plaque));
+    box-shadow: 0 2px 8px rgba(0,0,0,.4);
+    transform: rotate(-1.2deg);
+}
+
+.logo-tag {
+    display: block;
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--texte-doux);
+    font-style: italic;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-foot {
+    margin-top: 30px;
+    font-size: 13px;
+    color: var(--texte-doux);
+}
+
+.menu-foot strong { color: var(--orange); }
+
+/* ------------------------------ BOUTONS ------------------------------ */
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid var(--nuit-bord);
+    border-radius: var(--rayon);
+    background: var(--nuit-clair);
+    color: var(--texte);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: transform .08s ease, filter .15s ease;
+}
+
+.btn:active { transform: scale(.975); filter: brightness(1.15); }
+
+.btn--primary {
+    background: linear-gradient(180deg, var(--bleu-clair), var(--bleu));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(47,127,214,.32);
+}
+
+.btn--ghost {
+    background: transparent;
+    color: var(--texte-doux);
+    border-color: transparent;
+}
+
+.btn:disabled { opacity: .4; pointer-events: none; }
+
+.icon-btn {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+    color: var(--texte);
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.icon-btn:active { background: rgba(255,255,255,.16); }
+
+/* ------------------------------ BARRE HAUTE ------------------------------ */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--nuit-bord);
+}
+
+.topbar h2 {
+    flex: 1;
+    margin: 0;
+    font-size: 17px;
+    text-align: center;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.topbar-score {
+    flex: 0 0 42px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--orange);
+}
+
+/* ------------------------------ CHANTIERS ------------------------------ */
+
+.screen--levels { background: var(--nuit); }
+
+.level-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 14px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.level-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--nuit-bord);
+    border-radius: var(--rayon);
+    background: var(--nuit-clair);
+    color: var(--texte);
+    text-align: left;
+    cursor: pointer;
+}
+
+.level-card:active { filter: brightness(1.2); }
+
+.level-card.is-locked { opacity: .45; pointer-events: none; }
+
+.level-num {
+    flex: 0 0 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--plaque);
+    color: var(--nuit);
+    font-weight: 900;
+    font-size: 16px;
+}
+
+.level-card.is-locked .level-num { background: var(--nuit-bord); color: var(--texte-doux); }
+
+.level-info { flex: 1; min-width: 0; }
+
+.level-name {
+    display: block;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+
+.level-desc {
+    display: block;
+    font-size: 12px;
+    color: var(--texte-doux);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.level-stars {
+    flex: 0 0 auto;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--nuit-bord);
+}
+
+.level-stars .on { color: var(--orange); }
+
+/* ------------------------------ AIDE ------------------------------ */
+
+.help-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 14px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.help-card {
+    padding: 14px 16px;
+    border-radius: var(--rayon);
+    background: var(--nuit-clair);
+    border-left: 4px solid var(--bleu);
+}
+
+.help-card--tip { border-left-color: var(--orange); }
+
+.help-card h3 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--enduit);
+}
+
+.help-card p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--texte-doux);
+}
+
+.help-card strong { color: var(--texte); }
+
+/* ------------------------------ JEU ------------------------------ */
+
+.screen--game { background: var(--nuit); }
+
+.hud {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+}
+
+.hud-level { flex: 1; text-align: center; min-width: 0; }
+
+.hud-level-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hud-level-joint {
+    display: block;
+    font-size: 11px;
+    color: var(--texte-doux);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.hud-timer {
+    flex: 0 0 62px;
+    text-align: right;
+    font-size: 20px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--texte);
+}
+
+.hud-timer.is-urgent { color: var(--rouge); animation: pulse .6s infinite; }
+
+@keyframes pulse { 50% { opacity: .45; } }
+
+.canvas-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    margin: 0 10px;
+    border-radius: var(--rayon);
+    overflow: hidden;
+    background: var(--plaque);
+    box-shadow: inset 0 0 40px rgba(0,0,0,.22);
+}
+
+#canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+.toast {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translateX(-50%) scale(.85);
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(28,31,36,.9);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity .18s ease, transform .18s ease;
+}
+
+.toast.is-show { opacity: 1; transform: translateX(-50%) scale(1); }
+.toast.t-good { background: rgba(63,185,107,.94); }
+.toast.t-warn { background: rgba(232,161,58,.95); color: #241a05; }
+.toast.t-bad  { background: rgba(224,86,63,.94); }
+
+.start-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(28,31,36,.82);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    pointer-events: none;
+    animation: flotte 1.9s ease-in-out infinite;
+}
+
+.start-hint.is-hidden { display: none; }
+
+@keyframes flotte {
+    50% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* ------------------------------ JAUGES ------------------------------ */
+
+.gauges {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 12px 14px 14px;
+}
+
+.gauge-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+    margin-bottom: 5px;
+}
+
+.gauge-bar {
+    position: relative;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--nuit-clair);
+    overflow: hidden;
+}
+
+.gauge-bar > i {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--bleu);
+    transition: width .12s linear, background-color .25s ease;
+}
+
+.gauge-bar > i.g-good { background: var(--vert); }
+.gauge-bar > i.g-mid  { background: var(--orange); }
+.gauge-bar > i.g-bad  { background: var(--rouge); }
+
+.gauge-bar--speed { overflow: visible; }
+
+.speed-zone {
+    position: absolute;
+    top: 0;
+    left: 32%;
+    width: 34%;
+    height: 100%;
+    background: rgba(63,185,107,.34);
+    border-left: 1px solid rgba(63,185,107,.6);
+    border-right: 1px solid rgba(63,185,107,.6);
+}
+
+.gauge-bar--speed > b {
+    position: absolute;
+    top: 50%;
+    width: 4px;
+    height: 19px;
+    margin-left: -2px;
+    border-radius: 2px;
+    background: var(--enduit);
+    transform: translateY(-50%);
+    transition: left .09s linear;
+    box-shadow: 0 0 8px rgba(0,0,0,.5);
+}
+
+.gauge-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+    min-height: 13px;
+}
+
+.gauge-hint.h-good { color: var(--vert); }
+.gauge-hint.h-warn { color: var(--orange); }
+.gauge-hint.h-bad  { color: var(--rouge); }
+
+/* ------------------------------ RÉSULTAT ------------------------------ */
+
+.screen--result {
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(120% 70% at 50% 0%, #30363f 0%, var(--nuit) 62%);
+    overflow-y: auto;
+}
+
+.result-inner {
+    width: 100%;
+    max-width: 400px;
+    padding: 26px 24px;
+    text-align: center;
+}
+
+.result-kicker {
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+}
+
+.result-title {
+    margin: 8px 0 14px;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -.01em;
+}
+
+.stars { font-size: 34px; letter-spacing: 6px; color: var(--nuit-bord); }
+
+.stars span { display: inline-block; transform: scale(.7); opacity: .35; }
+
+.stars span.on {
+    color: var(--orange);
+    opacity: 1;
+    transform: scale(1);
+    animation: etoile .38s cubic-bezier(.2,1.6,.4,1) backwards;
+    text-shadow: 0 0 22px rgba(232,161,58,.55);
+}
+
+.stars span.on:nth-child(2) { animation-delay: .13s; }
+.stars span.on:nth-child(3) { animation-delay: .26s; }
+
+@keyframes etoile {
+    0%   { transform: scale(2.4) rotate(-25deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.result-score {
+    margin: 14px 0 18px;
+    font-size: 46px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+}
+
+.result-score small { font-size: 17px; color: var(--texte-doux); font-weight: 700; }
+
+.result-lines {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: var(--rayon);
+    background: var(--nuit-clair);
+    text-align: left;
+}
+
+.result-lines li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    padding: 5px 0;
+    color: var(--texte-doux);
+}
+
+.result-lines li b { color: var(--texte); font-variant-numeric: tabular-nums; }
+.result-lines li.neg b { color: var(--rouge); }
+.result-lines li.pos b { color: var(--vert); }
+
+.result-quote {
+    margin: 0 0 20px;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--texte-doux);
+}
+
+.result-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+/* ------------------------------ SON ------------------------------ */
+
+.sound-toggle {
+    position: absolute;
+    right: calc(10px + env(safe-area-inset-right, 0px));
+    bottom: calc(10px + var(--marge-bas));
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+    color: var(--texte-doux);
+    font-size: 15px;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.sound-toggle.is-off { color: var(--rouge); text-decoration: line-through; }
+
+/* Sur l'écran de jeu le bouton son gênerait les jauges */
+.screen--game.is-active ~ .sound-toggle { display: none; }
+
+/* ------------------------------ GRAND ÉCRAN ------------------------------ */
+
+@media (min-height: 780px) {
+    .gauges { gap: 12px; padding: 16px 18px 20px; }
+    .canvas-wrap { margin: 0 14px; }
+}
+
+@media (min-width: 720px) {
+    .canvas-wrap { max-width: 520px; width: 100%; margin: 0 auto; }
+    .gauges { max-width: 520px; width: 100%; margin: 0 auto; }
+    .hud { max-width: 520px; width: 100%; margin: 0 auto; }
+    .level-list, .help-body { max-width: 520px; width: 100%; margin: 0 auto; }
+}

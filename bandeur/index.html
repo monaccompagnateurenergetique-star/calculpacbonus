@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#1c1f24">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Le Bandeur : le jeu mobile du bandeur de BA13. Tire tes bandes, lisse tes joints, sors un mur nickel.">
+    <title>Le Bandeur — le jeu du BA13</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23d9d4c9'/%3E%3Crect x='44' y='0' width='12' height='100' fill='%23f6f4ef'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div id="app">
+
+    <!-- ÉCRAN : MENU -->
+    <section class="screen screen--menu is-active" id="screen-menu">
+        <div class="menu-inner">
+            <div class="logo">
+                <span class="logo-sub">le jeu du BA13</span>
+                <h1 class="logo-title">LE BANDEUR</h1>
+                <span class="logo-tag">Tire la bande. Lisse le joint. Zéro reprise.</span>
+            </div>
+
+            <div class="menu-buttons">
+                <button class="btn btn--primary" id="btn-play">Sur le chantier</button>
+                <button class="btn" id="btn-levels">Chantiers</button>
+                <button class="btn btn--ghost" id="btn-help">Comment ça marche</button>
+            </div>
+
+            <p class="menu-foot">
+                Meilleur ouvrier : <strong id="menu-stars">0</strong>/<span id="menu-stars-max">30</span> étoiles
+            </p>
+        </div>
+    </section>
+
+    <!-- ÉCRAN : CHOIX DU CHANTIER -->
+    <section class="screen screen--levels" id="screen-levels">
+        <header class="topbar">
+            <button class="icon-btn" data-back="menu" aria-label="Retour">←</button>
+            <h2>Les chantiers</h2>
+            <span class="topbar-score"><span id="levels-stars">0</span> ★</span>
+        </header>
+        <div class="level-list" id="level-list"></div>
+    </section>
+
+    <!-- ÉCRAN : RÈGLES -->
+    <section class="screen screen--help" id="screen-help">
+        <header class="topbar">
+            <button class="icon-btn" data-back="menu" aria-label="Retour">←</button>
+            <h2>Le métier</h2>
+            <span class="topbar-score"></span>
+        </header>
+        <div class="help-body">
+            <div class="help-card">
+                <h3>1. Charge le joint</h3>
+                <p>Pose le doigt sur le <strong>point vert</strong> en haut du joint, puis descends <strong>sans lever le doigt</strong>. Ton couteau suit ta main : la bande sera exactement aussi droite que toi.</p>
+            </div>
+            <div class="help-card">
+                <h3>2. Reste dans l'axe</h3>
+                <p>Si tu sors du joint, tu tartines la plaque pour rien. La jauge <em>Rectitude</em> descend et le chef le voit tout de suite.</p>
+            </div>
+            <div class="help-card">
+                <h3>3. La bonne vitesse</h3>
+                <p>Trop vite : la bande accroche pas, ça fait des <strong>manques</strong>. Trop lent : tu charges d'enduit et t'auras du <strong>bourrelet</strong> à poncer. Vise le vert sur la jauge.</p>
+            </div>
+            <div class="help-card">
+                <h3>4. Les cloques</h3>
+                <p>Les bulles d'air sur le joint doivent être <strong>chassées au ralenti</strong> : passe dessus doucement pour les crever. Une cloque oubliée, c'est une reprise.</p>
+            </div>
+            <div class="help-card">
+                <h3>5. Les angles</h3>
+                <p>Dans un angle, on ralentit. Sinon la bande plisse et tu repars pour un tour.</p>
+            </div>
+            <div class="help-card help-card--tip">
+                <h3>Notation</h3>
+                <p>★ 60 pts — passable · ★★ 80 pts — propre · ★★★ 92 pts — travail d'artiste.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ÉCRAN : JEU -->
+    <section class="screen screen--game" id="screen-game">
+        <header class="hud">
+            <button class="icon-btn" id="btn-quit" aria-label="Quitter">✕</button>
+            <div class="hud-level">
+                <span class="hud-level-name" id="hud-name">Chantier</span>
+                <span class="hud-level-joint" id="hud-joint">Joint 1/1</span>
+            </div>
+            <div class="hud-timer" id="hud-timer">30.0</div>
+        </header>
+
+        <div class="canvas-wrap">
+            <canvas id="canvas"></canvas>
+            <div class="toast" id="toast"></div>
+            <div class="start-hint" id="start-hint">Pose le doigt sur le point vert</div>
+        </div>
+
+        <footer class="gauges">
+            <div class="gauge">
+                <span class="gauge-label">Avancement</span>
+                <div class="gauge-bar"><i id="g-progress" style="width:0%"></i></div>
+            </div>
+            <div class="gauge">
+                <span class="gauge-label">Rectitude</span>
+                <div class="gauge-bar"><i id="g-straight" class="g-good" style="width:100%"></i></div>
+            </div>
+            <div class="gauge gauge--speed">
+                <span class="gauge-label">Vitesse du couteau</span>
+                <div class="gauge-bar gauge-bar--speed">
+                    <span class="speed-zone"></span>
+                    <b id="g-speed" style="left:0%"></b>
+                </div>
+                <span class="gauge-hint" id="speed-hint">—</span>
+            </div>
+        </footer>
+    </section>
+
+    <!-- ÉCRAN : FIN DE CHANTIER -->
+    <section class="screen screen--result" id="screen-result">
+        <div class="result-inner">
+            <span class="result-kicker" id="result-kicker">Fin de chantier</span>
+            <h2 class="result-title" id="result-title">Nickel !</h2>
+            <div class="stars" id="result-stars">
+                <span>★</span><span>★</span><span>★</span>
+            </div>
+            <div class="result-score"><span id="result-score">0</span><small>/100</small></div>
+            <ul class="result-lines" id="result-lines"></ul>
+            <p class="result-quote" id="result-quote"></p>
+            <div class="result-buttons">
+                <button class="btn btn--primary" id="btn-next">Chantier suivant</button>
+                <button class="btn" id="btn-retry">Refaire la bande</button>
+                <button class="btn btn--ghost" id="btn-result-menu">Quitter le chantier</button>
+            </div>
+        </div>
+    </section>
+
+    <button class="sound-toggle" id="btn-sound" aria-label="Son">♪</button>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
